@@ -24,7 +24,12 @@
         </router-link>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/register">Register</a>
+        <router-link class="nav-link"
+                     active-class="active"
+                     exact :to="{name: 'register'}"
+                     >
+          Register
+        </router-link>
       </li>
     </ul>
     <ul v-else class="navbar-nav ml-auto">

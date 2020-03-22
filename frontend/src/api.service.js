@@ -31,5 +31,10 @@ export default ApiService
 export const UserService = {
   login(username, password) {
     return ApiService.post('users/login/', { username: username, password: password })
+  },
+
+  register(username, password, isAdmin) {
+    console.log(username + ' ' + password + ' ' + isAdmin)
+    return ApiService.post('users/register/', { username: username, password: password, isAdmin: isAdmin })
   }
 }
