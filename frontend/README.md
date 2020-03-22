@@ -3,8 +3,10 @@ From Chen: I'm using this project: https://github.com/gothinkster/vue-realworld-
 store.js will be used to remember the user if they log in
 components will have reusable Vue components like the header
 views will have content that is specific to a page
-service.js will be responsible for making the API calls
+api.service.js will be responsible for making the API calls
 router/index.js will be where the routing is defined
+
+Delete HelloWorld.vue when you get around to making the actual GPA page
 
 > A Vue.js project
 
