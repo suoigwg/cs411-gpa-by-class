@@ -24,18 +24,28 @@
 </template>
 
 <script>
-export default {
-  name: 'Login',
-  data() {
-    return {
-      username: null,
-      password: null
-    }
-  },
-  methods: {
-    onSubmit(username, password) {
-      console.log(username + ' ' + password)
+  import { UserService } from '@/api.service'
+  import store from '@/store.js'
+  export default {
+    name: 'Login',
+    data() {
+      return {
+        username: null,
+        password: null
+      }
+    },
+    methods: {
+      onSubmit(username, password) {
+        UserService.login(username, password).then((data) => {
+          store.state.username = data.username
+          store.state.isAdmin = data.isAdmin
+          store.state.loggedIn = true
+
+          this.$router.push({name: 'home'})
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
     }
   }
-}
 </script>

@@ -36,15 +36,16 @@
 </template>
 
 <script>
-import store from '@/store.js'
+  import store from '@/store.js'
 
-export default {
-  name: 'MyHeader',
-  data() {
-    return {
-      username: store.state.username,
-      loggedIn: store.state.loggedIn
+  export default {
+    name: 'MyHeader',
+    data() {
+      return {
+        username: store.state.username,
+        loggedIn: store.state.loggedIn,
+        isAdmin: store.state.isAdmin
+      }
     }
   }
-}
 </script>

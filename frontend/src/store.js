@@ -1,7 +1,7 @@
 export default {
   state: {
     username: 'Chen',
-    admin: true,
+    isAdmin: true,
     loggedIn: false
   }
 }
