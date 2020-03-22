@@ -4,7 +4,7 @@ store.js will be used to remember the user if they log in
 components will have reusable Vue components like the header
 views will have content that is specific to a page
 api.service.js will be responsible for making the API calls
-router/index.js will be where the routing is defined
+router.js will be where the routing is defined
 
 Delete HelloWorld.vue when you get around to making the actual GPA page
 
