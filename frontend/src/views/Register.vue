@@ -37,8 +37,9 @@
 </template>
 
 <script>
-  import { UserService } from '@/api.service'
+  import {UserService} from '@/api.service'
   import store from '@/store.js'
+
   export default {
     name: 'Register',
     data() {

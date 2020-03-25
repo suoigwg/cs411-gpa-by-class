@@ -6,7 +6,7 @@
                      active-class="active"
                      exact
                      :to="{name: 'home'}"
-                     >
+        >
           GPA History
         </router-link>
       </li>
@@ -27,7 +27,7 @@
         <router-link class="nav-link"
                      active-class="active"
                      exact :to="{name: 'login'}"
-                     >
+        >
           Login
         </router-link>
       </li>
@@ -35,7 +35,7 @@
         <router-link class="nav-link"
                      active-class="active"
                      exact :to="{name: 'register'}"
-                     >
+        >
           Register
         </router-link>
       </li>
@@ -45,7 +45,7 @@
         <div> Hi {{username}}!</div>
       </li>
     </ul>
-</nav>
+  </nav>
 </template>
 
 <script>
