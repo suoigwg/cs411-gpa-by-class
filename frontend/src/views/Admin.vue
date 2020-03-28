@@ -13,14 +13,14 @@
         </select>
       </div>
     </div>
-    <div v-if="GPAs.length > 0">
+    <div v-if="items.length > 0">
       <div v-if="!editMode">
         <button class="btn btn-primary float-right"
                 @click="enterEditMode"
                 >
           Edit
         </button>
-        <CustomTable :items="GPAs" :itemsPerPage="itemsPerPage" :currentPage="currentPage" @pagechanged="onPageChange"></CustomTable>
+        <CustomTable :items="items" :itemsPerPage="itemsPerPage" :currentPage="currentPage" @pagechanged="onPageChange"></CustomTable>
       </div>
       <div v-else>
         <button class="btn btn-danger float-right"
@@ -33,7 +33,7 @@
                 >
           Save
         </button>
-        <EditableTable :items="tempGPAs" :itemsPerPage="itemsPerPage" :currentPage="currentPage" @pagechanged="onPageChange"></EditableTable>
+        <EditableTable :items="items" :itemsPerPage="itemsPerPage" :currentPage="currentPage" @pagechanged="onPageChange"></EditableTable>
       </div>
     </div>
   </div>
@@ -43,6 +43,7 @@
   import CustomTable from '@/components/Table'
   import EditableTable from '@/components/EditableTable'
   import store from '@/store.js'
+  import { CoursesService, GPAService } from '@/api.service.js'
 
   export default {
     components: { CustomTable, EditableTable },
@@ -55,7 +56,7 @@
         editMode: false,
         itemsPerPage: 5,
         currentPage: 1,
-        GPAs: [
+        items: [
           { id: 0, subject: 'CS', number: '100', title: 'Intro to CS' },
           { id: 1, subject: 'CS', number: '101', title: 'Intermediate CS' },
           { id: 2, subject: 'CS', number: '102', title: 'Intermediate CS' },
@@ -76,23 +77,26 @@
           { id: 17, subject: 'CS', number: '117', title: 'Intermediate CS' },
           { id: 18, subject: 'CS', number: '118', title: 'Intermediate CS' },
           { id: 19, subject: 'CS', number: '119', title: 'Intermediate CS' },
-        ]
+        ],
+        masterItemList: []
       }
     },
     computed: {
-      tempGPAs() {
-        return this.GPAs
+      tempItems() {
+        return this.items
       }
     },
     methods: {
-      loadClassList(event) {
-        console.log('Selected: ' + event.target.value)
-        // TODO: call class list api
+      loadClassList() {
+        CoursesService.getCourses(this.selectedSubject)
+          .then(response => (console.log(response)))
+          .catch(error => (console.log(error)))
       },
 
-      loadGPAInfo(event) {
-        console.log('Selected: ' + event.target.value)
-        // TODO
+      loadGPAInfo() {
+        GPAService.getGPAInfo(this.selectedSubject, this.selectedClass)
+          .then(response => (console.log(response)))
+          .catch(error => (console.log(error)))
       },
 
       onPageChange(page) {
@@ -100,18 +104,30 @@
       },
 
       enterEditMode() {
+        this.masterItemList = JSON.parse(JSON.stringify(this.items))
         this.editMode = true
       },
 
       saveEdit() {
         this.editMode = false
+        if (this.selectedClass) {
+          // Use GPAService
+        } else {
+          // Use CourseService
+        }
+        store.clearEdit()
       },
 
       cancelEdit() {
         this.editMode = false
-        console.log(store.state.deletedItems)
+        this.items = this.masterItemList
         store.clearEdit()
       }
+    },
+    created() {
+      CoursesService.getSubjects()
+        .then(response => (console.log(response)))
+        .catch(error => (console.log(error)))
     }
   }
 </script>

@@ -6,7 +6,7 @@
         <md-table-head v-for="(value, key) in items[0]" :key="key" v-if="key !== 'id'">{{key}}</md-table-head>
       </md-table-row>
       <!-- eslint-disable-next-line vue/valid-v-for -->
-      <md-table-row v-for="item in currentItems">
+      <md-table-row v-for="(item, index) in currentItems" :key="index">
         <md-table-cell v-for="(value, key) in item" :key="key" v-if="key !== 'id'">{{value}}</md-table-cell>
       </md-table-row>
     </md-table>

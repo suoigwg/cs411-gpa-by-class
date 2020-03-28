@@ -8,7 +8,7 @@
       </md-table-row>
       <!--Display current items-->
       <!-- eslint-disable-next-line vue/valid-v-for -->
-      <md-table-row v-for="item in currentItems">
+      <md-table-row v-for="(item, index) in currentItems" :key="index">
         <md-table-cell v-for="(value, key) in item" :key="key" v-if="key !== 'id'">
             <textarea v-model="item[key]"
                       @input="updateItem(item.id)">
@@ -23,7 +23,7 @@
       </md-table-row>
       <!--Display newly added items-->
       <!-- eslint-disable-next-line vue/valid-v-for -->
-      <md-table-row v-for="item in store.state.newItems">
+      <md-table-row v-for="(item, index) in store.state.newItems" :key="index">
         <md-table-cell v-for="(value, key) in item" :key="key" v-if="key !== 'id'">
             <textarea v-model="item[key]">
             </textarea>
