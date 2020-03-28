@@ -34,7 +34,56 @@ export const UserService = {
   },
 
   register(username, password, isAdmin) {
-    console.log(username + ' ' + password + ' ' + isAdmin)
     return ApiService.post('users/register/', { username: username, password: password, isAdmin: isAdmin })
+  }
+}
+
+export const CoursesService = {
+  getSubjects() {
+    return ApiService.get('api/subjects')
+  },
+
+  getCourses(subject) {
+    return ApiService.get('api/courses', {subject: subject})
+  },
+
+  newCourses(courses) {
+    return ApiService.post('api/courses/new', {courses: courses})
+  },
+
+  updateCourses(courses) {
+    return ApiService.post('api/courses/updated', {courses: courses})
+  },
+
+  deleteCourses(courses) {
+    return ApiService.post('api/courses/deleted', {courses: courses})
+  }
+}
+
+export const GPAService = {
+  getGPAInfo(subject, number) {
+    return ApiService.get('api/coursegpa', {subject: subject, number: number})
+  },
+
+  newGPAInfo(gpas) {
+    return ApiService.post('api/coursesgpa/new', {gpas: gpas})
+  },
+
+  updateGPAInfo(gpas) {
+    return ApiService.post('api/coursesgpa/updated', {gpas: gpas})
+  },
+
+  deleteGPAInfo(gpas) {
+    return ApiService.post('api/coursesgpa/deleted', {gpas: gpas})
+  }
+}
+
+export const ProfessorService = {
+  getProfessorNames() {
+    return ApiService.get('api/professorNames')
+  },
+
+  getGPA(year, dept) {
+    return ApiService.get('api/gpa', { year: year, dept: dept })
   }
 }

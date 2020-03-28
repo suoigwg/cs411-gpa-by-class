@@ -1,5 +1,5 @@
 <template>
-  <ul class="pagination">
+  <ul class="pagination" :disabled="isFirstPage">
     <li class="pagination-item">
       <button type="button"
               @click="onClickFirstPage"
