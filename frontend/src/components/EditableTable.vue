@@ -10,9 +10,9 @@
       <!-- eslint-disable-next-line vue/valid-v-for -->
       <md-table-row v-for="(item, index) in currentItems" :key="index">
         <md-table-cell v-for="(value, key) in item" :key="key" v-if="key !== 'id'">
-            <textarea v-model="item[key]"
-                      @input="updateItem(item.id)">
-            </textarea>
+          <textarea v-model="item[key]"
+                    @input="updateItem(item.id)">
+          </textarea>
         </md-table-cell>
         <md-table-cell>
           <button class="btn btn-danger"
@@ -23,10 +23,9 @@
       </md-table-row>
       <!--Display newly added items-->
       <!-- eslint-disable-next-line vue/valid-v-for -->
-      <md-table-row v-for="(item, index) in store.state.newItems" :key="index">
+      <md-table-row v-for="(item, index) in store.state.newItems" :key="index + currentItems.length">
         <md-table-cell v-for="(value, key) in item" :key="key" v-if="key !== 'id'">
-            <textarea v-model="item[key]">
-            </textarea>
+          <textarea v-model="item[key]"></textarea>
         </md-table-cell>
         <md-table-cell>
           <button class="btn btn-danger"
@@ -38,7 +37,7 @@
       <!--Display add new item row-->
       <md-table-row>
         <md-table-cell v-for="(value, key) in newItem" :key="key" v-if="key !== 'id'">
-            <textarea v-model="newItem[key]"></textarea>
+          <textarea v-model="newItem[key]"></textarea>
         </md-table-cell>
         <md-table-cell>
           <button class="btn btn-primary"
@@ -48,7 +47,7 @@
         </md-table-cell>
       </md-table-row>
     </md-table>
-    <Pagination :total-pages="totalPages" :current-page="currentPage" @pagechanged="onPageChange"></Pagination>
+    <Pagination class="d-flex justify-content-center" :total-pages="totalPages" :current-page="currentPage" @pagechanged="onPageChange"></Pagination>
   </div>
 </template>
 
@@ -127,7 +126,7 @@
 
       addItem() {
         for (const property in this.newItem) {
-          if (this.newItem[property] === '') {
+          if (property !== 'id' && this.newItem[property] === '') {
             return
           }
         }

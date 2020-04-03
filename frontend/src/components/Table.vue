@@ -10,7 +10,7 @@
         <md-table-cell v-for="(value, key) in item" :key="key" v-if="key !== 'id'">{{value}}</md-table-cell>
       </md-table-row>
     </md-table>
-      <Pagination :total-pages="totalPages" :current-page="currentPage" @pagechanged="onPageChange"></Pagination>
+    <Pagination class="d-flex justify-content-center" :total-pages="totalPages" :current-page="currentPage" @pagechanged="onPageChange"></Pagination>
     </div>
   </template>
 

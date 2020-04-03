@@ -49,8 +49,8 @@
     components: { CustomTable, EditableTable },
     data() {
       return {
-        subjects: ['CS'],
-        classes: [100, 125],
+        subjects: [],
+        classes: [],
         selectedSubject: null,
         selectedClass: null,
         editMode: false,
