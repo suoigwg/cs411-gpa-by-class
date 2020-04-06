@@ -16,9 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from pages.views import home_view
+from courses import views
 
 urlpatterns = [
-	path('', home_view, name='home'),
+	path('', views.home_view, name='home'),
     path('admin/', admin.site.urls),
+    path('api/gpa/', views.gpa_by_year_dept),
+    path('coursegpa/', views.gpa_list),
+    # path('coursegpa/new', views.gpa_new),
+    # path('coursegpa/updated', views.gpa_updated),
+    # path('coursegpa/deleted', views.gpa_deleted),
+    path('api/courseNumbers/', views.course_num_list),
+    path('api/professorNames/', views.professor_list), 
 ]
