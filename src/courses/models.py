@@ -10,21 +10,6 @@ class Course(models.Model):
         managed = False
         db_table = 'Course'
 
-
-class Gpa(models.Model):
-    term = models.TextField(db_column='Term', blank=True, null=True)  # Field name made lowercase.
-    value = models.FloatField(db_column='Value', blank=True, null=True)  # Field name made lowercase.
-    courseid = models.IntegerField(db_column='CourseId', blank=True, null=True)  # Field name made lowercase.
-    classsize = models.IntegerField(db_column='ClassSize', blank=True, null=True)  # Field name made lowercase.
-    year = models.IntegerField(db_column='Year', blank=True, null=True)  # Field name made lowercase.
-    professorid = models.IntegerField(db_column='ProfessorId', blank=True, null=True)  # Field name made lowercase.
-    gpaid = models.AutoField(db_column='GPAId', primary_key=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'GPA'
-
-
 class Professor(models.Model):
     name = models.TextField(db_column='Name', blank=True, null=True)  # Field name made lowercase.
     department = models.TextField(db_column='Department', blank=True, null=True)  # Field name made lowercase.
@@ -34,6 +19,18 @@ class Professor(models.Model):
         managed = False
         db_table = 'Professor'
 
+class Gpa(models.Model):
+    term = models.TextField(db_column='Term', blank=True, null=True)  # Field name made lowercase.
+    value = models.FloatField(db_column='Value', blank=True, null=True)  # Field name made lowercase.
+    courseid = models.ForeignKey(Course, on_delete=models.CASCADE)  # Field name made lowercase.
+    classsize = models.IntegerField(db_column='ClassSize', blank=True, null=True)  # Field name made lowercase.
+    year = models.IntegerField(db_column='Year', blank=True, null=True)  # Field name made lowercase.
+    professorid = models.ForeignKey(Professor, on_delete=models.CASCADE)  # Field name made lowercase.
+    gpaid = models.AutoField(db_column='GPAId', primary_key=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'GPA'
 
 class User(models.Model):
     username = models.TextField(db_column='UserName', blank=True, null=True)  # Field name made lowercase.
