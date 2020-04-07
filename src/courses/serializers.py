@@ -18,19 +18,38 @@ class CourseSerializer(serializers.ModelSerializer):
     #     instance.courseno = validated_data.get('courseno', instance.courseno)
     #     instance.subject = validated_data.get('subject', instance.subject)
     #     instance.title = validated_data.get('title', instance.title)
+class CourseNoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ('subject', 'courseno')
+
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ('subject',)
+
+class CourseNoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ('courseno',)
 
 class GpaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gpa
         fields = ('term', 'value', 'courseid', 'classsize', 'year', 'professorid', 'gpaid')
 
-
 class ProfessorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professor
         fields = ('name', 'department', 'professorid')
 
+class ProfessorNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Professor
+        fields = ('name',)
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'password', 'isadmin')
+        fields = ('username', 'isadmin')
