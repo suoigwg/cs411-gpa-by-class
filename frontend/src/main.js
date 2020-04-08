@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
+import {store} from './store'
 
 Vue.config.productionTip = false
 Vue.use(VueMaterial)
@@ -16,6 +17,7 @@ ApiService.init()
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  store,
+  components: {App},
   template: '<App/>'
 })

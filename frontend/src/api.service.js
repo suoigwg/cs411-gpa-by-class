@@ -10,6 +10,7 @@ const ApiService = {
   },
 
   get(url, params = {}) {
+    console.log(url)
     return Vue.axios.get(url, params)
   },
 
@@ -30,11 +31,11 @@ export default ApiService
 
 export const UserService = {
   login(username, password) {
-    return ApiService.post('users/login/', { username: username, password: password })
+    return ApiService.post('users/login/', {username: username, password: password})
   },
 
   register(username, password, isAdmin) {
-    return ApiService.post('users/register/', { username: username, password: password, isAdmin: isAdmin })
+    return ApiService.post('users/register/', {username: username, password: password, isAdmin: isAdmin})
   }
 }
 
@@ -61,6 +62,9 @@ export const CoursesService = {
 }
 
 export const GPAService = {
+  getGPAByDeptAndYear(year, dept) {
+    return ApiService.get(`gpa/${year}/${dept}`)
+  },
   getGPAInfo(subject, number) {
     return ApiService.get('api/coursegpa', {subject: subject, number: number})
   },
@@ -84,6 +88,6 @@ export const ProfessorService = {
   },
 
   getGPA(year, dept) {
-    return ApiService.get('api/gpa', { year: year, dept: dept })
+    return ApiService.get('api/gpa', {year: year, dept: dept})
   }
 }
