@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from courses import views
-
+from courses import rest
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/login/', views.user_login),
@@ -30,5 +30,7 @@ urlpatterns = [
     # path('coursegpa/new', views.gpa_new),
     # path('coursegpa/updated', views.gpa_updated),
     # path('coursegpa/deleted', views.gpa_deleted),
-    path('api/professorNames/', views.professor_list), 
+    path('api/professorNames/', views.professor_list),
+
+    path('gpa/<int:year>/<str:dept>', rest.getGPAByDeptAndYear)
 ]
