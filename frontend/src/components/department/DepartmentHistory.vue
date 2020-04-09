@@ -9,36 +9,24 @@
       </md-menu>
       <span class="subject">{{department}}</span>
     </div>
+    <div>
+      <input type="range" min="2010" max="2019" step="1" class="slider" v-model.number="year" @change="fetchData">
+      <span class="md-subheading">{{year}}</span>
+    </div>
     <BarChart :chart-data="datacollection"></BarChart>
   </div>
 </template>
 <script>
   import BarChart from '../bar_chart/BarChart'
-  import {UPDATE_DEPT_GPA} from '../../mutation-types'
-  import {GPAService} from '../../api.service'
-  import store from '../../store'
-  import {mapState} from 'vuex'
 
   export default {
     data: function () {
       return {
-        department: '',
-        grade: [],
+        department: 'BIOE',
+        year: 2010,
         datacollection: {
-          // labels: ['CS411', 'CS412', 'CS413', 'CS414', 'CS415', 'CS416', 'CS417', 'CS418', 'CS419', 'CS420', 'CS421', 'CS422'],
-          // labels: this.deptGPA.map((item) => item['Subject'] + item['CourseNo']),
-          // datasets: [
-          //   {
-          //     label: 'GPA',
-          //     backgroundColor: '#f87979',
-          //     pointBackgroundColor: 'white',
-          //     borderWidth: 1,
-          //     pointBorderColor: '#249EBF',
-          //     // Data to be represented on y-axis
-          //     data: this.deptGPA.map((item) => item['Value']),
-          //     fill: false
-          //   },
-          // ]
+          labels: [],
+          datasets: []
         }
       }
     },
@@ -51,11 +39,11 @@
       if (this.$store.state.subjects.length === 0) {
         this.$store.dispatch('fetch_subject_list')
       }
+      this.fetchData()
     },
     methods: {
-      setDepartment: function (event) {
-        this.department = event.target.innerText
-        this.$store.dispatch('fetch_dept_data', {year: 2010, dept: this.department}).then(() => {
+      fetchData: function () {
+        this.$store.dispatch('fetch_dept_data', {year: this.year, dept: this.department}).then(() => {
           this.datacollection = {
             labels: this.$store.state.deptGPA.map((item) => [item['Subject'], item['CourseNo']].join(' ')),
             datasets: [
@@ -67,7 +55,10 @@
             ]
           }
         })
-
+      },
+      setDepartment: function (event) {
+        this.department = event.target.innerText
+        this.fetchData()
       }
     },
   }
@@ -83,6 +74,36 @@
   .subject {
     display: inline-block;
     vertical-align: middle;
+  }
+
+  .slider {
+    -webkit-appearance: none;
+    width: 40%;
+    height: 5px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+  }
+
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
   }
 
 </style>

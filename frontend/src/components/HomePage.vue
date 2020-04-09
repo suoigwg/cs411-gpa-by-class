@@ -15,7 +15,7 @@
             <span class="md-list-item-text">All Courses</span>
           </md-list-item>
 
-          <md-list-item v-on:click="page='By Course/Instructor'">
+          <md-list-item v-on:click="page='By Course'">
             <md-icon>menu_book</md-icon>
             <span class="md-list-item-text">By Course/Instructor</span>
           </md-list-item>
@@ -38,7 +38,7 @@
       </md-app-drawer>
 
       <md-app-content>
-        <CourseHistory v-if="page==='By Course/Instructor'"></CourseHistory>
+        <CourseHistory v-if="page==='By Course'"></CourseHistory>
         <DepartmentHistory v-if="page==='By Department'"></DepartmentHistory>
         <AllGrades v-if="page==='All Grades'"></AllGrades>
       </md-app-content>

@@ -65,10 +65,9 @@ export const GPAService = {
   getGPAByDeptAndYear(year, dept) {
     return ApiService.get(`gpa/${year}/${dept}`)
   },
-  getGPAInfo(subject, number) {
-    return ApiService.get('api/coursegpa', {subject: subject, number: number})
+  getGPAInfo(courseNumber) {
+    return ApiService.get(`gpa/${courseNumber}`)
   },
-
   newGPAInfo(gpas) {
     return ApiService.post('api/coursesgpa/new', {gpas: gpas})
   },

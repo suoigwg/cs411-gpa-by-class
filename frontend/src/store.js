@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
-import {UPDATE_DEPT_GPA, GET_SUBJECT_LIST} from './mutation-types'
-import ApiService, {GPAService, CoursesService} from './api.service'
+import {GET_COURSE_GPA, GET_SUBJECT_LIST, UPDATE_DEPT_GPA} from './mutation-types'
+import {CoursesService, GPAService} from './api.service'
 import Vue from 'vue'
 
 Vue.use(Vuex)
@@ -8,7 +8,8 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   state: {
     deptGPA: [],
-    subjects: []
+    subjects: [],
+    courseGPA: [],
   },
   mutations: {
     [UPDATE_DEPT_GPA](state, data) {
@@ -17,6 +18,9 @@ export const store = new Vuex.Store({
     },
     [GET_SUBJECT_LIST](state, data) {
       state.subjects = data
+    },
+    [GET_COURSE_GPA](state, data) {
+      state.courseGPA = data.sort((a, b) => (a['Year'] + a['Term']).localeCompare((b['Year'] + b['Term'])))
     }
   },
   actions: {
@@ -28,10 +32,17 @@ export const store = new Vuex.Store({
       })
     },
     fetch_subject_list(context) {
-      CoursesService.getSubjects().then((response) => {
+      return CoursesService.getSubjects().then((response) => {
         context.commit(GET_SUBJECT_LIST, response.data)
       }, () => {
         console.log('fail to load subjects')
+      })
+    },
+    fetch_course_gpa({commit}, {courseNumber}) {
+      return GPAService.getGPAInfo(courseNumber).then((response) => {
+        commit(GET_COURSE_GPA, response.data)
+      }, () => {
+        console.log('fail to load data')
       })
     }
   }
