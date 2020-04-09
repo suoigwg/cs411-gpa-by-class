@@ -62,6 +62,9 @@ export const CoursesService = {
 }
 
 export const GPAService = {
+  getAnnualGPAAvg(year) {
+    return ApiService.get(`gpa/avg/${year}`)
+  },
   getGPAByDeptAndYear(year, dept) {
     return ApiService.get(`gpa/${year}/${dept}`)
   },

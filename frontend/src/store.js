@@ -1,5 +1,5 @@
 import Vuex from 'vuex'
-import {GET_COURSE_GPA, GET_SUBJECT_LIST, UPDATE_DEPT_GPA} from './mutation-types'
+import {GET_AVG_GPA_BY_YEAR, GET_COURSE_GPA, GET_SUBJECT_LIST, UPDATE_DEPT_GPA} from './mutation-types'
 import {CoursesService, GPAService} from './api.service'
 import Vue from 'vue'
 
@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
     deptGPA: [],
     subjects: [],
     courseGPA: [],
+    annualAvgGPA: [],
   },
   mutations: {
     [UPDATE_DEPT_GPA](state, data) {
@@ -21,6 +22,9 @@ export const store = new Vuex.Store({
     },
     [GET_COURSE_GPA](state, data) {
       state.courseGPA = data.sort((a, b) => (a['Year'] + a['Term']).localeCompare((b['Year'] + b['Term'])))
+    },
+    [GET_AVG_GPA_BY_YEAR](state, data) {
+      state.annualAvgGPA = data.sort((a, b) => (a['Subject'].localeCompare(b['Subject'])))
     }
   },
   actions: {
@@ -41,6 +45,13 @@ export const store = new Vuex.Store({
     fetch_course_gpa({commit}, {courseNumber}) {
       return GPAService.getGPAInfo(courseNumber).then((response) => {
         commit(GET_COURSE_GPA, response.data)
+      }, () => {
+        console.log('fail to load data')
+      })
+    },
+    fetch_annual_avg_gpa({commit}, {year}) {
+      return GPAService.getAnnualGPAAvg(year).then((response) => {
+        commit(GET_AVG_GPA_BY_YEAR, response.data)
       }, () => {
         console.log('fail to load data')
       })

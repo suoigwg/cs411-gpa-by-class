@@ -60,6 +60,5 @@
       // renderChart function renders the chart with the dataCollection and options object.
       this.renderChart(this.chartData, this.options)
     },
-    options: {}
   }
 </script>

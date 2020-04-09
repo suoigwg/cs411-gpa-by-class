@@ -57,9 +57,7 @@
 
 <style>
   .small {
-    max-width: 1000px;
     margin: 10px auto;
-    max-height: 50px;
   }
 
 </style>
