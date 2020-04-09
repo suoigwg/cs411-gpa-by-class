@@ -52,3 +52,14 @@ def getGPAByYear(request, year):
         dict(zip(columns, row))
         for row in cursor.fetchall()
     ])
+
+
+@api_view(['GET'])
+def getAvgGPA(request, year):
+    cursor = connection.cursor()
+    cursor.execute(GET_AVG_GPA, [year])
+    columns = [col[0] for col in cursor.description]
+    return Response([
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ])

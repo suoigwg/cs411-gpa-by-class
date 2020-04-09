@@ -27,3 +27,13 @@ from GPA
          join Professor P on GPA.ProfessorId = P.ProfessorId
 where Year = %s
 ;"""
+
+GET_AVG_GPA = """
+select Subject, avg(Value) as Average
+from GPA
+         join Course C on GPA.CourseId = C.CourseId
+         join Professor P on GPA.ProfessorId = P.ProfessorId
+where Year = %s
+group by Subject
+;
+"""
