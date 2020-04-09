@@ -15,7 +15,7 @@
         <md-list>
           <md-list-item>
             <md-icon>donut_large</md-icon>
-            <span class="md-list-item-text" v-on:click='navigate'>All Grades</span>
+            <span class="md-list-item-text" v-on:click='navigate'>Department Average Grades</span>
           </md-list-item>
 
           <md-list-item>
@@ -33,17 +33,13 @@
             <span class="md-list-item-text">Prereq</span>
           </md-list-item>
 
-          <md-list-item>
-            <md-icon>account_circle</md-icon>
-            <span class="md-list-item-text">Update</span>
-          </md-list-item>
         </md-list>
       </md-app-drawer>
 
       <md-app-content>
         <CourseHistory v-if="page==='By Course'"></CourseHistory>
         <DepartmentHistory v-if="page==='By Department'"></DepartmentHistory>
-        <AllGrades v-if="page==='All Grades'"></AllGrades>
+        <AllGrades v-if="page==='Department Average Grades'"></AllGrades>
       </md-app-content>
     </md-app>
   </div>
@@ -84,7 +80,7 @@
   }
 
   .md-drawer {
-    width: 236px;
+    width: 300px;
     max-width: calc(100vw - 125px);
   }
 
