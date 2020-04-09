@@ -34,5 +34,7 @@ urlpatterns = [
     path('api/professorNames/', views.professor_list),
 
     path('gpa/<int:year>/<str:dept>', rest.getGPAByDeptAndYear),
+    path('gpa/<str:course>', rest.getCourseGPA),
     path('api/subjects/', rest.getAllDpetAbbr)
+
 ]
