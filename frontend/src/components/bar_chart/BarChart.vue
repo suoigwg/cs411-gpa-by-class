@@ -12,7 +12,6 @@
     mixins: [reactiveProp],
     data() {
       return {
-        gpaData: [],
         // Chart.js options that controls the appearance of the chart
         options: {
           scales: {

@@ -18,12 +18,13 @@ from django.urls import path
 
 from courses import views
 from courses import rest
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/login/', views.user_login),
     path('users/register', views.user_register),
     path('api/courses/', views.course_by_subject),
-    path('api/subjects/', views.subject_list),
+    # path('api/subjects/', views.subject_list),
     path('api/courseNumbers/', views.course_num_list),
     path('api/gpa/', views.gpa_by_year_dept),
     path('api/coursegpa/', views.gpa_list),
@@ -32,5 +33,6 @@ urlpatterns = [
     # path('coursegpa/deleted', views.gpa_deleted),
     path('api/professorNames/', views.professor_list),
 
-    path('gpa/<int:year>/<str:dept>', rest.getGPAByDeptAndYear)
+    path('gpa/<int:year>/<str:dept>', rest.getGPAByDeptAndYear),
+    path('api/subjects/', rest.getAllDpetAbbr)
 ]

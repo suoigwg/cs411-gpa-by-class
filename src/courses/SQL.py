@@ -5,3 +5,7 @@ from GPA
 where Year = %s
   and Subject = %s;
 """
+
+GET_ALL_DEPT_ABBR = """
+SELECT distinct (Subject) FROM Course;
+"""

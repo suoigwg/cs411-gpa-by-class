@@ -13,3 +13,12 @@ def getGPAByDeptAndYear(request, dept, year):
         dict(zip(columns, row))
         for row in cursor.fetchall()
     ])
+
+
+@api_view(['GET'])
+def getAllDpetAbbr(request):
+    cursor = connection.cursor()
+    cursor.execute(GET_ALL_DEPT_ABBR)
+    abbr = cursor.fetchall()
+    flatten = lambda abbr: [item for sublist in abbr for item in sublist]
+    return Response(flatten(abbr))

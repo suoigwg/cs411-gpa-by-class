@@ -57,17 +57,12 @@
         this.department = event.target.innerText
         this.$store.dispatch('fetch_dept_data', {year: 2010, dept: this.department}).then(() => {
           this.datacollection = {
-            labels: this.$store.state.deptGPA.map((item) => item['Subject'] + item['CourseNo']),
+            labels: this.$store.state.deptGPA.map((item) => [item['Subject'], item['CourseNo']].join(' ')),
             datasets: [
               {
                 label: 'GPA',
-                backgroundColor: '#723472',
-                pointBackgroundColor: 'white',
-                borderWidth: 1,
-                pointBorderColor: '#249EBF',
-                // Data to be represented on y-axis
                 data: this.$store.state.deptGPA.map((item) => item['Value']),
-                fill: false
+                backgroundColor: '#448aff',
               }
             ]
           }

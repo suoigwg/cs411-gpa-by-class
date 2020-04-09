@@ -13,7 +13,7 @@ export const store = new Vuex.Store({
   mutations: {
     [UPDATE_DEPT_GPA](state, data) {
       // mutate state
-      state.deptGPA = data.sort((a, b) => a['CourseNo'] < b['CourseNo'])
+      state.deptGPA = data.sort((a, b) => a['CourseNo'] - b['CourseNo'])
     },
     [GET_SUBJECT_LIST](state, data) {
       state.subjects = data
