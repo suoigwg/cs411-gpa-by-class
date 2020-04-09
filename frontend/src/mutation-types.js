@@ -1,0 +1,2 @@
+export const UPDATE_DEPT_GPA = 'UPDATE_DEPT_GPA'
+export const GET_SUBJECT_LIST = 'GET_SUBJECT_LIST'
