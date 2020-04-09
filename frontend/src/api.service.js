@@ -11,18 +11,21 @@ const ApiService = {
 
   get(url, params = {}) {
     console.log(url)
-    return Vue.axios.get(url, params)
+    return Vue.axios.get(url, { params: params })
   },
 
   post(url, params = {}) {
+    console.log(url)
     return Vue.axios.post(url, params)
   },
 
   put(url, params = {}) {
+    console.log(url)
     return Vue.axios.put(url, params)
   },
 
   delete(url, params = {}) {
+    console.log(url)
     return Vue.axios.delete(url, params)
   }
 }

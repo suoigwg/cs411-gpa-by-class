@@ -9,7 +9,7 @@
       <div v-if="classes.length > 0">
         <label for="classSelect">Number:</label>
         <select id="classSelect" v-model="selectedClass" @change="loadGPAInfo">
-          <option v-for="classNum in classes" :value="classNum" :key="classNum">{{classNum}}</option>
+          <option v-for="(classNum, index) in classes" :value="classNum" :key="index">{{classNum}}</option>
         </select>
       </div>
     </div>
@@ -56,28 +56,7 @@
         editMode: false,
         itemsPerPage: 5,
         currentPage: 1,
-        items: [
-          { id: 0, subject: 'CS', number: '100', title: 'Intro to CS' },
-          { id: 1, subject: 'CS', number: '101', title: 'Intermediate CS' },
-          { id: 2, subject: 'CS', number: '102', title: 'Intermediate CS' },
-          { id: 3, subject: 'CS', number: '103', title: 'Intermediate CS' },
-          { id: 4, subject: 'CS', number: '104', title: 'Intermediate CS' },
-          { id: 5, subject: 'CS', number: '105', title: 'Intermediate CS' },
-          { id: 6, subject: 'CS', number: '106', title: 'Intermediate CS' },
-          { id: 7, subject: 'CS', number: '107', title: 'Intermediate CS' },
-          { id: 8, subject: 'CS', number: '108', title: 'Intermediate CS' },
-          { id: 9, subject: 'CS', number: '109', title: 'Intermediate CS' },
-          { id: 10, subject: 'CS', number: '110', title: 'Intermediate CS' },
-          { id: 11, subject: 'CS', number: '111', title: 'Intermediate CS' },
-          { id: 12, subject: 'CS', number: '112', title: 'Intermediate CS' },
-          { id: 13, subject: 'CS', number: '113', title: 'Intermediate CS' },
-          { id: 14, subject: 'CS', number: '114', title: 'Intermediate CS' },
-          { id: 15, subject: 'CS', number: '115', title: 'Intermediate CS' },
-          { id: 16, subject: 'CS', number: '116', title: 'Intermediate CS' },
-          { id: 17, subject: 'CS', number: '117', title: 'Intermediate CS' },
-          { id: 18, subject: 'CS', number: '118', title: 'Intermediate CS' },
-          { id: 19, subject: 'CS', number: '119', title: 'Intermediate CS' },
-        ],
+        items: [],
         masterItemList: []
       }
     },
@@ -89,13 +68,20 @@
     methods: {
       loadClassList() {
         CoursesService.getCourses(this.selectedSubject)
-          .then(response => (console.log(response)))
+          .then(response => {
+            console.log(response)
+            this.classes = response.data.map(elem => elem.courseno)
+            this.items = response.data
+          })
           .catch(error => (console.log(error)))
       },
 
       loadGPAInfo() {
-        GPAService.getGPAInfo(this.selectedSubject, this.selectedClass)
-          .then(response => (console.log(response)))
+        GPAService.getGPAInfo(this.selectedSubject + this.selectedClass)
+          .then(response => {
+            console.log(response)
+            this.items = response.data
+          })
           .catch(error => (console.log(error)))
       },
 
@@ -111,9 +97,37 @@
       saveEdit() {
         this.editMode = false
         if (this.selectedClass) {
-          // Use GPAService
+          if (store.state.newItems.length > 0) {
+            GPAService.newCourses(store.state.newItems)
+              .then(response => (console.log(response)))
+              .catch(error => (console.log(error)))
+          }
+          if (store.state.updatedItems.length > 0) {
+            GPAService.updateCourses(store.state.updatedItems)
+              .then(response => (console.log(response)))
+              .catch(error => (console.log(error)))
+          }
+          if (store.state.deletedItems.length > 0) {
+            GPAService.deleteCourses(store.state.deletedItems)
+              .then(response => (console.log(response)))
+              .catch(error => (console.log(error)))
+          }
         } else {
-          // Use CourseService
+          if (store.state.newItems.length > 0) {
+            CoursesService.newCourses(store.state.newItems)
+              .then(response => (console.log(response)))
+              .catch(error => (console.log(error)))
+          }
+          if (store.state.updatedItems.length > 0) {
+            CoursesService.updateCourses(store.state.updatedItems)
+              .then(response => (console.log(response)))
+              .catch(error => (console.log(error)))
+          }
+          if (store.state.deletedItems.length > 0) {
+            CoursesService.deleteCourses(store.state.deletedItems)
+              .then(response => (console.log(response)))
+              .catch(error => (console.log(error)))
+          }
         }
         store.clearEdit()
       },
@@ -126,7 +140,10 @@
     },
     created() {
       CoursesService.getSubjects()
-        .then(response => (console.log(response)))
+        .then(response => {
+          console.log(response)
+          this.subjects = response.data
+        })
         .catch(error => (console.log(error)))
     }
   }
