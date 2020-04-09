@@ -7,12 +7,12 @@
           <md-menu-item @click="setDepartment" v-for="subject in this.$store.state.subjects">{{subject}}</md-menu-item>
         </md-menu-content>
       </md-menu>
-      <span class="subject">{{department}}</span>
     </div>
     <div>
       <input type="range" min="2010" max="2019" step="1" class="slider" v-model.number="year" @change="fetchData">
       <span class="md-subheading">{{year}}</span>
     </div>
+    <span class="md-display-3">{{department}}</span>
     <BarChart :chart-data="datacollection"></BarChart>
   </div>
 </template>

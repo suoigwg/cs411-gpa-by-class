@@ -45,7 +45,9 @@
             ]
           }
           if (this.$store.state.courseGPA.length > 0) {
-            this.title = this.$store.state.courseGPA[0]['Title']
+            this.title = this.course_number.toUpperCase() + ' ' + this.$store.state.courseGPA[0]['Title']
+          } else {
+            this.title = 'No course found'
           }
         })
       }

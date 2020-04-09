@@ -2,27 +2,30 @@
   <div class="page-container">
     <md-app>
       <md-app-toolbar class="md-primary">
+        <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
+          <md-icon>menu</md-icon>
+        </md-button>
         <span class="md-title">{{page}}</span>
       </md-app-toolbar>
-      <md-app-drawer md-permanent="full">
+      <md-app-drawer :md-active.sync="menuVisible">
         <md-toolbar class="md-transparent" md-elevation="0">
           Filters
         </md-toolbar>
 
         <md-list>
-          <md-list-item v-on:click="page='All Grades'">
+          <md-list-item>
             <md-icon>donut_large</md-icon>
-            <span class="md-list-item-text">All Courses</span>
+            <span class="md-list-item-text" v-on:click='navigate'>All Grades</span>
           </md-list-item>
 
-          <md-list-item v-on:click="page='By Course'">
+          <md-list-item>
             <md-icon>menu_book</md-icon>
-            <span class="md-list-item-text">By Course/Instructor</span>
+            <span class="md-list-item-text" v-on:click='navigate'>By Course</span>
           </md-list-item>
 
-          <md-list-item v-on:click="page='By Department'">
+          <md-list-item>
             <md-icon>apartment</md-icon>
-            <span class="md-list-item-text">By Department</span>
+            <span class="md-list-item-text" v-on:click='navigate'>By Department</span>
           </md-list-item>
 
           <md-list-item>
@@ -55,15 +58,20 @@
     name: 'HelloWorld',
     data() {
       return {
-        msg: 'Welcome to Your Vue.js App',
-        page: 'By Course/Instructor'
+        page: 'By Course/Instructor',
+        menuVisible: true,
       }
     },
     components: {
-      // eslint-disable-next-line camelcase
       CourseHistory,
       DepartmentHistory,
       AllGrades
+    },
+    methods: {
+      navigate: function (event) {
+        this.page = event.target.innerText
+        this.menuVisible = false
+      }
     }
   }
 </script>
