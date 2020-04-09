@@ -58,7 +58,7 @@
     name: 'HelloWorld',
     data() {
       return {
-        page: 'By Course/Instructor',
+        page: 'All Grades',
         menuVisible: true,
       }
     },
