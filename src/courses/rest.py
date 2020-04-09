@@ -41,3 +41,14 @@ def getCourseGPA(request, course):
         dict(zip(columns, row))
         for row in cursor.fetchall()
     ])
+
+
+@api_view(['GET'])
+def getGPAByYear(request, year):
+    cursor = connection.cursor()
+    cursor.execute(GET_GPA_BY_YEAR, [year])
+    columns = [col[0] for col in cursor.description]
+    return Response([
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ])

@@ -35,6 +35,7 @@ urlpatterns = [
 
     path('gpa/<int:year>/<str:dept>', rest.getGPAByDeptAndYear),
     path('gpa/<str:course>', rest.getCourseGPA),
+    path('gpa/list/<int:year>', rest.getGPAByYear),
     path('api/subjects/', rest.getAllDpetAbbr)
 
 ]

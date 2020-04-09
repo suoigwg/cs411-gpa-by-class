@@ -19,3 +19,11 @@ where Subject = %s
   and CourseNo = %s
 ;
 """
+
+GET_GPA_BY_YEAR = """
+select *
+from GPA
+         join Course C on GPA.CourseId = C.CourseId
+         join Professor P on GPA.ProfessorId = P.ProfessorId
+where Year = %s
+;"""
