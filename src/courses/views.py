@@ -45,6 +45,15 @@ where Subject = %s
 ;
 """
 
+GET_AVG_GPA = """
+SELECT AVG(Value) as avgVal, C.Subject, C.CourseNo
+FROM GPA
+JOIN Course C on GPA.CourseId = C.CourseId
+WHERE C.Subject = %s
+GROUP BY C.CourseNo
+ORDER BY avgVal
+"""
+
 GPA_EXIST = """
 SELECT *
 FROM Gpa
@@ -208,6 +217,17 @@ def getCourseGPA(request):
     sub = request.GET.get('subject')
     no = request.GET.get('number')
     cursor.execute(GET_COURSE_GPA, [sub, no])
+    columns = [col[0] for col in cursor.description]
+    return Response([
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ])
+
+@api_view(['GET'])
+def getAvgGPA(request):
+    cursor = connection.cursor()
+    sub = request.GET.get('subject')
+    cursor.execute(GET_AVG_GPA, [sub])
     columns = [col[0] for col in cursor.description]
     return Response([
         dict(zip(columns, row))
