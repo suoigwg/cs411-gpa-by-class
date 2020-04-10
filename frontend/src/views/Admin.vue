@@ -99,33 +99,51 @@
         if (this.selectedClass) {
           if (store.state.newItems.length > 0) {
             GPAService.newCourses(store.state.newItems)
-              .then(response => (console.log(response)))
+              .then(response => {
+                console.log(response)
+                this.loadGPAInfo()
+              })
               .catch(error => (console.log(error)))
           }
           if (store.state.updatedItems.length > 0) {
             GPAService.updateCourses(store.state.updatedItems)
-              .then(response => (console.log(response)))
+              .then(response => {
+                console.log(response)
+                this.loadGPAInfo()
+              })
               .catch(error => (console.log(error)))
           }
           if (store.state.deletedItems.length > 0) {
             GPAService.deleteCourses(store.state.deletedItems)
-              .then(response => (console.log(response)))
+              .then(response => {
+                console.log(response)
+                this.loadGPAInfo()
+              })
               .catch(error => (console.log(error)))
           }
         } else {
           if (store.state.newItems.length > 0) {
             CoursesService.newCourses(store.state.newItems)
-              .then(response => (console.log(response)))
+              .then(response => {
+                console.log(response)
+                this.loadClassList()
+              })
               .catch(error => (console.log(error)))
           }
           if (store.state.updatedItems.length > 0) {
             CoursesService.updateCourses(store.state.updatedItems)
-              .then(response => (console.log(response)))
+              .then(response => {
+                console.log(response)
+                this.loadClassList()
+              })
               .catch(error => (console.log(error)))
           }
           if (store.state.deletedItems.length > 0) {
             CoursesService.deleteCourses(store.state.deletedItems)
-              .then(response => (console.log(response)))
+              .then(response => {
+                console.log(response)
+                this.loadClassList()
+              })
               .catch(error => (console.log(error)))
           }
         }
