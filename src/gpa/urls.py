@@ -28,7 +28,7 @@ urlpatterns = [
     path('api/gpa/', views.getGPAByDeptAndYear),
     path('api/coursegpa/', views.getCourseGPA),
     path('api/coursegpa/new/', views.gpa_new),
-    path('api/coursegpa/update/', views.gpa_update),
-    path('api/coursegpa/delete/', views.gpa_delete),
+    path('api/coursegpa/updated/', views.gpa_update),
+    path('api/coursegpa/deleted/', views.gpa_delete),
     path('api/professorNames/', views.professor_list), 
 ]
