@@ -58,7 +58,7 @@ VALUES(%s, %s, %s, %s, %s, %s, %s)
 
 GPA_UPDATE = """
 UPDATE Gpa
-SET Value = %s
+SET Term = %s, Value = %s, CourseId = %s, Classsize = %s, Year = %s, ProfessorId = %s
 WHERE GPAId = %s
 """
 
@@ -187,7 +187,7 @@ def gpa_new(request):
 	courseid = request.POST.get('courseid')
 	classsize = request.POST.get('classsize')
 	year = request.POST.get('year')
-	professorid = request.POST.get('professorId')
+	professorid = request.POST.get('professorid')
 	gpaid = request.POST.get('gpaid')
 	# check if gpaid exists
 	cursor = connection.cursor()
@@ -200,7 +200,12 @@ def gpa_new(request):
 
 @api_view(['POST'])
 def gpa_update(request):
+	term = request.POST.get('term')
 	value = request.POST.get('value')
+	courseid = request.POST.get('courseid')
+	classsize = request.POST.get('classsize')
+	year = request.POST.get('year')
+	professorid = request.POST.get('professorid')
 	gpaid = request.POST.get('gpaid')
 	# check if gpaid exists
 	cursor = connection.cursor()
@@ -208,7 +213,7 @@ def gpa_update(request):
 	if cursor.rowcount == 0:
 		return Response("Record id does not exist", status = 400)
 	cursor = connection.cursor()
-	cursor.execute(GPA_UPDATE, [value, gpaid])
+	cursor.execute(GPA_UPDATE, [term, value, courseid, classsize, year, professorid, gpaid])
 	return Response("Gpa record updated.", status = 200)
 
 @api_view(['POST'])
