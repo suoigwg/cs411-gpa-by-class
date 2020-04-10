@@ -67,6 +67,38 @@ DELETE FROM Gpa
 WHERE GPAID = %s
 """
 
+GET_COURSE_GPA = """
+select *
+from GPA
+         join Course C on GPA.CourseId = C.CourseId
+         join Professor P on GPA.ProfessorId = P.ProfessorId
+where Subject = %s
+  and CourseNo = %s
+;
+"""
+
+COURSE_EXIST = """
+SELECT *
+FROM Course
+WHERE CourseId = %s
+"""
+
+COURSE_NEW = """
+INSERT INTO Course(CourseId, CourseNo, Subject, Title)
+VALUES(%s, %s, %s, %s)
+"""
+
+COURSE_UPDATE = """
+UPDATE Course
+SET CourseNo = %s, Subject = %s, Title = %s
+WHERE CourseId = %s
+"""
+
+COURSE_DELETE = """
+DELETE FROM Course
+WHERE CourseId = %s
+"""
+
 # UserService:
 # POST /users/login/
 # Input: {username, password}
@@ -227,6 +259,48 @@ def gpa_delete(request):
 	cursor = connection.cursor()
 	cursor.execute(GPA_DELETE, [gpaid])
 	return Response("Gpa record deleted.", status = 200)
+
+@api_view(['POST'])
+def course_new(request):
+	courseid = request.POST.get('courseid')
+	courseno = request.POST.get('courseno')
+	subject = request.POST.get('subject')
+	title = request.POST.get('title')
+	# check if gpaid exists
+	cursor = connection.cursor()
+	cursor.execute(COURSE_EXIST, [courseid])
+	if cursor.rowcount > 0:
+		return Response("Duplicated Gpaid", status = 400)
+	cursor = connection.cursor()
+	cursor.execute(COURSE_NEW, [courseid, courseno, subject, title])
+	return Response("New record added", status = 200)
+
+@api_view(['POST'])
+def course_update(request):
+	courseid = request.POST.get('courseid')
+	courseno = request.POST.get('courseno')
+	subject = request.POST.get('subject')
+	title = request.POST.get('title')
+	# check if gpaid exists
+	cursor = connection.cursor()
+	cursor.execute(COURSE_EXIST, [courseid])
+	if cursor.rowcount == 0:
+		return Response("Record id does not exist", status = 400)
+	cursor = connection.cursor()
+	cursor.execute(COURSE_UPDATE, [courseno, subject, title, courseid])
+	return Response("Course record updated.", status = 200)
+
+@api_view(['POST'])
+def course_delete(request):
+	courseid = request.POST.get('courseid')
+	# check if gpaid exists
+	cursor = connection.cursor()
+	cursor.execute(COURSE_EXIST, [courseid])
+	if cursor.rowcount > 0:
+		return Response("Record id does not exist", status = 200)
+	cursor = connection.cursor()
+	cursor.execute(COURSE_DELETE, [courseid])
+	return Response("Gpa record deleted.", status = 200)	
 
 # # ProfessorService:
 # # Get /api/professorNames/
