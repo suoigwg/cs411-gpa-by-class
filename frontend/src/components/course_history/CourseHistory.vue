@@ -1,23 +1,17 @@
 <template>
   <div>
-    <div>
-      <md-autocomplete
-        v-model="selectedCountry"
-        :md-options="countries"
-        md-layout="box"
-        md-dense>
-        <label>Type a Course or an Instructor</label>
-      </md-autocomplete>
-    </div>
+    <md-field>
+      <label>Type in course number here(Example: CS411)</label>
+      <md-input v-model="course_number" @keyup.enter.native="fetchData"></md-input>
+    </md-field>
+    <span class="md-display-3">{{this.title}}</span>
     <div class="small" v-if="loaded">
       <LineChart :chart-data="datacollection"></LineChart>
     </div>
-
   </div>
 </template>
 
 <script>
-  import lodash from 'lodash'
   import LineChart from '../line_chart/LineChart'
 
   export default {
@@ -26,49 +20,44 @@
     },
     data() {
       return {
-        course_number: '',
+        course_number: 'cs411',
         loaded: true,
-        selectedCountry: null,
-        selectedEmployee: null,
-        countries: [
-          'Abdussalam Alawini',
-          'CS411'
-        ],
+        title: '',
         datacollection: {
-          labels: ['Spring 2019', 'Spring 2020', 'Spring 2021', 'Spring 2022', 'Spring 2023'],
-          datasets: [{
-            label: 'GPA',
-            data: [1, 2, 3, 4, 5],
-            backgroundColor: '#f12121',
-            fill: false
-          }
-          ]
+          labels: [],
+          datasets: []
         }
       }
     },
-    mounted() {
-    },
-    watch: {
-      course_number: function () {
-        this.debouncedGetData()
-      }
-    },
     created: function () {
-      this.debouncedGetData = lodash.debounce(this.getData, 500)
+      this.fetchData()
     },
     methods: {
-      getData: function () {
-        alert('111')
+      fetchData: function () {
+        this.$store.dispatch('fetch_course_gpa', {courseNumber: this.course_number}).then(() => {
+          this.datacollection = {
+            labels: this.$store.state.courseGPA.map((item) => [item['Term'], item['Year'], item['Name']].join(' ')),
+            datasets: [
+              {
+                label: 'GPA',
+                data: this.$store.state.courseGPA.map((item) => item['Value']),
+              }
+            ]
+          }
+          if (this.$store.state.courseGPA.length > 0) {
+            this.title = this.course_number.toUpperCase() + ' ' + this.$store.state.courseGPA[0]['Title']
+          } else {
+            this.title = 'No course found'
+          }
+        })
       }
-    }
+    },
   }
 </script>
 
 <style>
   .small {
-    max-width: 1000px;
     margin: 10px auto;
-    max-height: 50px;
   }
 
 </style>

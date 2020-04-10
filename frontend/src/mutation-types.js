@@ -1,0 +1,4 @@
+export const UPDATE_DEPT_GPA = 'UPDATE_DEPT_GPA'
+export const GET_SUBJECT_LIST = 'GET_SUBJECT_LIST'
+export const GET_COURSE_GPA = 'GET_COURSE_GPA'
+export const GET_AVG_GPA_BY_YEAR = 'GET_AVG_GPA_BY_YEAR'

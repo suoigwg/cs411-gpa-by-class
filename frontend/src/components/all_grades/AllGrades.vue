@@ -1,10 +1,10 @@
 <template>
   <div>
     <div>
-      <input type="range" min="2010" max="2019" step="1" class="slider" v-model.number="amount">
-      <span class="md-subheading">{{amount}}</span>
+      <input type="range" min="2010" max="2019" step="1" class="slider" v-model.number="year" @change="fetchData">
+      <span class="md-subheading">{{year}}</span>
     </div>
-    <BubbleChart></BubbleChart>
+    <BubbleChart :chart-data="this.datacollection"></BubbleChart>
   </div>
 </template>
 
@@ -14,10 +14,43 @@
   export default {
     name: 'AllGrades',
     data: () => ({
-      amount: 2019
+      year: 2019,
+      datacollection: {
+        labels: [],
+        datasets: []
+      }
     }),
     components: {
       BubbleChart
+    },
+    created() {
+      this.fetchData()
+    },
+    methods: {
+      fetchData: function () {
+        this.$store.dispatch('fetch_annual_avg_gpa', {year: this.year}).then(() => {
+          let bubble = []
+          this.$store.state.annualAvgGPA.forEach((record, id) => {
+            bubble.push({
+              x: id,
+              y: record['Average'],
+              r: record['Average'] / 4.0 * 15,
+              sub: record['Subject']
+            })
+          })
+          this.datacollection = {
+            labels: this.$store.state.annualAvgGPA.map((item) => item['Subject']),
+            datasets: [
+              {
+                label: 'GPA',
+                data: bubble,
+                backgroundColor: '#448aff',
+              }
+            ]
+          }
+          console.log(bubble)
+        })
+      }
     }
   }
 </script>

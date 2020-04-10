@@ -13,6 +13,14 @@
       <li class="nav-item">
         <a class="nav-link" href="/prereq">Class Prerequistes</a>
       </li>
+      <li class="nav-item" v-if="isAdmin">
+        <router-link class="nav-link"
+                     active-class="active"
+                     exact :to="{name: 'admin'}"
+                     >
+          Admin
+        </router-link>
+      </li>
     </ul>
     <ul v-if="!loggedIn" class="navbar-nav ml-auto">
       <li class="nav-item">

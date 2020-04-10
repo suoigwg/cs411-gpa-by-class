@@ -2,27 +2,30 @@
   <div class="page-container">
     <md-app>
       <md-app-toolbar class="md-primary">
+        <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
+          <md-icon>menu</md-icon>
+        </md-button>
         <span class="md-title">{{page}}</span>
       </md-app-toolbar>
-      <md-app-drawer md-permanent="full">
+      <md-app-drawer :md-active.sync="menuVisible">
         <md-toolbar class="md-transparent" md-elevation="0">
           Filters
         </md-toolbar>
 
         <md-list>
-          <md-list-item v-on:click="page='All Grades'">
+          <md-list-item>
             <md-icon>donut_large</md-icon>
-            <span class="md-list-item-text">All Courses</span>
+            <span class="md-list-item-text" v-on:click='navigate'>Department Average Grades</span>
           </md-list-item>
 
-          <md-list-item v-on:click="page='By Course/Instructor'">
+          <md-list-item>
             <md-icon>menu_book</md-icon>
-            <span class="md-list-item-text">By Course/Instructor</span>
+            <span class="md-list-item-text" v-on:click='navigate'>By Course</span>
           </md-list-item>
 
-          <md-list-item v-on:click="page='By Department'">
+          <md-list-item>
             <md-icon>apartment</md-icon>
-            <span class="md-list-item-text">By Department</span>
+            <span class="md-list-item-text" v-on:click='navigate'>By Department</span>
           </md-list-item>
 
           <md-list-item>
@@ -30,17 +33,13 @@
             <span class="md-list-item-text">Prereq</span>
           </md-list-item>
 
-          <md-list-item>
-            <md-icon>account_circle</md-icon>
-            <span class="md-list-item-text">Update</span>
-          </md-list-item>
         </md-list>
       </md-app-drawer>
 
       <md-app-content>
-        <CourseHistory v-if="page==='By Course/Instructor'"></CourseHistory>
+        <CourseHistory v-if="page==='By Course'"></CourseHistory>
         <DepartmentHistory v-if="page==='By Department'"></DepartmentHistory>
-        <AllGrades v-if="page==='All Grades'"></AllGrades>
+        <AllGrades v-if="page==='Department Average Grades'"></AllGrades>
       </md-app-content>
     </md-app>
   </div>
@@ -55,15 +54,20 @@
     name: 'HelloWorld',
     data() {
       return {
-        msg: 'Welcome to Your Vue.js App',
-        page: 'By Course/Instructor'
+        page: 'All Grades',
+        menuVisible: true,
       }
     },
     components: {
-      // eslint-disable-next-line camelcase
       CourseHistory,
       DepartmentHistory,
       AllGrades
+    },
+    methods: {
+      navigate: function (event) {
+        this.page = event.target.innerText
+        this.menuVisible = false
+      }
     }
   }
 </script>
@@ -76,7 +80,7 @@
   }
 
   .md-drawer {
-    width: 236px;
+    width: 300px;
     max-width: calc(100vw - 125px);
   }
 
