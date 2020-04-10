@@ -5,7 +5,7 @@ from rest_framework import serializers
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ('courseid', 'courseno', 'subject', 'title')
+        fields = ('courseno', 'subject', 'title')#('courseid', 'courseno', 'subject', 'title')
     # normal serializer:    
     # courseid = serializers.IntegerField(read_only = True)
     # courseno = serializers.IntegerField()

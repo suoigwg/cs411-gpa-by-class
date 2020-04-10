@@ -4,41 +4,106 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from .models import Course, Gpa, Professor, User
 from .serializers import CourseSerializer, GpaSerializer, ProfessorSerializer, UserSerializer, SubjectSerializer, CourseNoSerializer, ProfessorNameSerializer, CourseNoSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.db import connection
+
+# SQL queries
+USER_LOGIN = """select Username, IsAdmin
+from User
+where Username = %s and Password = %s;
+"""
+
+USER_EXIST = """select *
+from User
+where Username = %s
+"""
+
+USER_REGISTER = """INSERT INTO User(Username, Password, IsAdmin)
+VALUES(%s, %s, %s);
+"""
+
+GPA_BY_YEAR_AND_DEPT = """select *
+from GPA
+         join Course C on GPA.CourseId = C.CourseId
+         join Professor P on GPA.ProfessorId = P.ProfessorId
+where Year = %s
+  and Subject = %s;
+"""
+
+GET_ALL_DEPT_ABBR = """
+SELECT distinct (Subject) FROM Course;
+"""
+
+GET_COURSE_GPA = """
+select *
+from GPA
+         join Course C on GPA.CourseId = C.CourseId
+         join Professor P on GPA.ProfessorId = P.ProfessorId
+where Subject = %s
+  and CourseNo = %s
+;
+"""
+
+GPA_EXIST = """
+SELECT *
+FROM Gpa
+WHERE GPAId = %s
+"""
+
+GPA_NEW = """
+INSERT INTO Gpa(Term, Value, CourseId, Classsize, Year, ProfessorId, GPAId)
+VALUES(%s, %s, %s, %s, %s, %s, %s)
+"""
+
+GPA_UPDATE = """
+UPDATE Gpa
+SET Value = %s
+WHERE GPAId = %s
+"""
+
+GPA_DELETE = """
+DELETE FROM Gpa
+WHERE GPAID = %s
+"""
 
 # UserService:
 # POST /users/login/
 # Input: {username, password}
 # Response: 200 or 400
 # {username, isAdmin}
-@csrf_exempt
+@api_view(['POST'])
 def user_login(request):
-	if request.method == 'POST':
-		username = request.POST.get('username')
-		password = request.POST.get('password')
-		user = User.objects.filter(username = username, password = password)
-		serializer = UserSerializer(user)
-		return JSONResponse(serializer.data, safe = False, status = 200)
-		# if user.is_valid():
-		# 	serializer.save()
-		# 	return JSONResponse(serializer.data, status = 200)
-		# else:
-		# 	return JSONReponse(serializer.data, status = 400)
-	return HttpResponse("Incorrect request method", safe = False, status = 400)
+	username = request.POST.get('username')
+	password = request.POST.get('password')
+	cursor = connection.cursor()
+	cursor.execute(USER_LOGIN, [username, password])
+	if cursor.rowcount == 0:
+		return Response("Incorrect username or password", status = 400)
+	columns = [col[0] for col in cursor.description]
+	return Response([
+		dict(zip(columns, row))
+		for row in cursor.fetchall()
+		])
 
 # POST /users/register/
 # Input: {username, password, isAdmin}
 # Response: 200 or 400
-@csrf_exempt
+@api_view(['POST'])
 def user_register(request):
-	if request.method == 'POST':
-		username = request.POST.get('username')
-		if len(User.objects.filter(username = username)) > 0:
-			return HttpResponse("Username exists.", status = 400)
-		password = request.POST.get('password')
-		isAdmin = request.POST.get('isAdmin')
-		new_user = User(username = username, password = password, isadmin = isAdmin)
-		new_user.save()
-		return HttpResponse("Successfully registered.", status = 200)
+	username = request.POST.get('username')
+	password = request.POST.get('password')
+	isAdmin = request.POST.get('isAdmin')
+	#check if user exist
+	cursor = connection.cursor()
+	cursor.execute(USER_EXIST, [username])
+	if cursor.rowcount > 0:
+		return Response("Username exists.", status = 400)
+    #register
+	else:
+		cursor = connection.cursor()
+		cursor.execute(USER_REGISTER, [username, password, isAdmin])
+		return Response("Successfully registered.", status = 200)
 
 # CoursesService:
 # GET /api/courses/
@@ -61,27 +126,23 @@ def course_by_subject(request):
 # Get /api/subjects/
 # Input: None
 # Response: [List of subject codes]
-@csrf_exempt
-def subject_list(request):
-	if request.method == 'GET':
-		subjects = Course.objects.order_by('subject').values('subject').distinct()
-		serializer = SubjectSerializer(subjects, many=True)
-		return JsonResponse(serializer.data, safe = False, status = 200)
-		# if serializer.is_valid():
-		# 	return JsonResponse(serializer.data, status = 200)
-		# else:
-		# 	return JsonResponse(serializer.errors, status = 400)
-	return HttpResponse("Incorrect request method", status = 400)
+@api_view(['GET'])
+def getAllDpetAbbr(request):
+    cursor = connection.cursor()
+    cursor.execute(GET_ALL_DEPT_ABBR)
+    abbr = cursor.fetchall()
+    flatten = lambda abbr: [item for sublist in abbr for item in sublist]
+    return Response(flatten(abbr))
 
 # # Get /api/courseNumbers/
-# # Input: None
-# # Response: [List of course Numbers] (CS411, CS233, ..)
+# # Input: Subject
+# # Response: [List of course Numbers] (411, 233, ..)
 @csrf_exempt
 def course_num_list(request):
     if request.method == 'GET':
-        courses = Course.objects.values('subject', 'courseno')
-        serializer = CourseNoSerializer(courses, many=True)
-        return JsonResponse(serializer.data, safe = False, status = 200)
+    	subject = request.GET.get('subject')
+    	coursenos = list(Course.objects.filter(subject = subject).values_list('courseno', flat= True).distinct())
+    	return JsonResponse(coursenos, safe = False, status = 200)
         # if serializer.is_valid():
         # 	return JsonResponse(serializer.data, status = 200)
         # else:
@@ -91,58 +152,76 @@ def course_num_list(request):
 # Get /api/gpa/
 # Input: {year, dept}
 # Output: [{course+gpa+professor}, ]
-@csrf_exempt
-def gpa_by_year_dept(request):
-	if request.method == 'GET':
-		year = request.GET.get('year')
-		dept = request.GET.get('dept')
-		course_sub = Course.objects.filter(subject = dept).values('courseid')			
-		gpa_sub = Gpa.objects.filter(year = year, courseid__in = course_sub)
-		serializer = GpaSerializer(gpa_sub, many=True)
-		return JsonResponse(serializer.data, safe = False, status = 200)
-			# if serializer.is_valid():
-			# 	return JsonResponse(serializer.data, status = 200)
-			# else:
-			# 	return JsonResponse(serializer.errors, status = 400)
-	return HttpResponse("Incorrect request method", status = 400)
+@api_view(['GET'])
+def getGPAByDeptAndYear(request):
+	year = request.GET.get('year')
+	dept = request.GET.get('dept')
+	cursor = connection.cursor()
+	cursor.execute(GPA_BY_YEAR_AND_DEPT, [year, dept])
+	columns = [col[0] for col in cursor.description]
+	return Response([
+		dict(zip(columns, row))
+		for row in cursor.fetchall()
+		])
 
 # GPAService:
 # GET /api/coursegpa/
 # Input: {subject, number}
-# Response: [List of GPA info] + (#professor_name,# subject, number)
-@csrf_exempt
-def gpa_list(request):
-    if request.method == 'GET':
-    	subject = request.GET.get('subject')
-    	courseno = request.GET.get('number')
-    	course_sub = Course.objects.filter(subject = subject, courseno = courseno).values('courseid')
-    	gpa_sub = Gpa.objects.filter(courseid__in = course_sub)       
-    	gpa_serializer = GpaSerializer(gpa_sub, many=True)
-    	return JsonResponse(gpa_serializer.data, safe = False, status = 200)
-    	# if serializer.is_valid() and pro_name_serializer.is_valid():
-    	# 	return JsonResponse(gpa_serializer.data + pro_name_serializer.data, safe = False, status = 200)
-    	# else:
-    	# 	return JsonResponse(serializer.errors, status = 400)
-    return HttpResponse("Incorrect request method", status = 400)	
+# Response: [List of GPA info] + (professor_name, subject, number)
+@api_view(['GET'])
+def getCourseGPA(request):
+    cursor = connection.cursor()
+    sub = request.GET.get('subject')
+    no = request.GET.get('number')
+    cursor.execute(GET_COURSE_GPA, [sub, no])
+    columns = [col[0] for col in cursor.description]
+    return Response([
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ])
 
-# @csrf_exempt
-# def gpa_new(request):
-# 	if request.method == 'POST'
-# 	return Response("Get gpa new post request")
+@api_view(['POST'])
+def gpa_new(request):
+	term = request.POST.get('term')
+	value = request.POST.get('value')
+	courseid = request.POST.get('courseid')
+	classsize = request.POST.get('classsize')
+	year = request.POST.get('year')
+	professorid = request.POST.get('professorId')
+	gpaid = request.POST.get('gpaid')
+	# check if gpaid exists
+	cursor = connection.cursor()
+	cursor.execute(GPA_EXIST, [gpaid])
+	if cursor.rowcount > 0:
+		return Response("Duplicated Gpaid", status = 400)
+	cursor = connection.cursor()
+	cursor.execute(GPA_NEW, [term, value, courseid, classsize, year, professorid, gpaid])
+	return Response("New record added", status = 200)
 
-# @csrf_exempt
-# def gpa_updated(request):
-# 	if request.method == 'POST'
-# 		return Response("Get gpa updated post request")
-# 	else
-# 		return JSONResponse(serializer.errors, status = 400)
+@api_view(['POST'])
+def gpa_update(request):
+	value = request.POST.get('value')
+	gpaid = request.POST.get('gpaid')
+	# check if gpaid exists
+	cursor = connection.cursor()
+	cursor.execute(GPA_EXIST, [gpaid])
+	if cursor.rowcount == 0:
+		return Response("Record id does not exist", status = 400)
+	cursor = connection.cursor()
+	cursor.execute(GPA_UPDATE, [value, gpaid])
+	return Response("Gpa record updated.", status = 200)
 
-# @csrf_exempt
-# def gpa_deleted(request):
-# 	if request.method == 'POST'
-
-# 		return Response("Get gpa deleted post request")
-
+@api_view(['POST'])
+def gpa_delete(request):
+	gpaid = request.POST.get('gpaid')
+	# check if gpaid exists
+	cursor = connection.cursor()
+	cursor.execute(GPA_EXIST, [gpaid])
+	if cursor.rowcount > 0:
+		return Response("Record id does not exist", status = 200)
+	cursor = connection.cursor()
+	cursor.execute(GPA_DELETE, [gpaid])
+	return Response("Gpa record deleted.", status = 200)
 
 # # ProfessorService:
 # # Get /api/professorNames/
@@ -151,9 +230,8 @@ def gpa_list(request):
 @csrf_exempt
 def professor_list(request):
     if request.method == 'GET':
-        professors = Professor.objects.values('name')
-        serializer = ProfessorNameSerializer(professors, many=True)
-        return JsonResponse(serializer.data, safe = False, status = 200)
+        professors = list(Professor.objects.values_list('name', flat = True)).distinct()
+        return JsonResponse(professors, safe = False, status = 200)
         # if serializer.is_valid():
         # 	return JsonResponse(serializer.data, status = 200)
         # else:
