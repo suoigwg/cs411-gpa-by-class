@@ -71,7 +71,9 @@
           .then(response => {
             console.log(response)
             this.classes = response.data.map(elem => elem.courseno)
+            this.classes.sort()
             this.items = response.data
+            this.currentPage = 1
           })
           .catch(error => (console.log(error)))
       },
@@ -81,6 +83,7 @@
           .then(response => {
             console.log(response)
             this.items = response.data
+            this.currentPage = 1
           })
           .catch(error => (console.log(error)))
       },
@@ -131,7 +134,9 @@
               .catch(error => (console.log(error)))
           }
           if (store.state.updatedItems.length > 0) {
-            CoursesService.updateCourses(store.state.updatedItems)
+            let updatedItems = store.state.updatedItems.map(index => { return this.items[index] })
+            console.log(updatedItems)
+            CoursesService.updateCourses(updatedItems)
               .then(response => {
                 console.log(response)
                 this.loadClassList()
@@ -161,6 +166,7 @@
         .then(response => {
           console.log(response)
           this.subjects = response.data
+          this.subjects.sort()
         })
         .catch(error => (console.log(error)))
     }

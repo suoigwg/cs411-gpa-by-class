@@ -37,10 +37,9 @@
     },
     methods: {
       onSubmit(username, password) {
-        UserService.login(username, password).then((data) => {
-          store.state.username = data.username
-          store.state.isAdmin = data.isAdmin
-          store.state.loggedIn = true
+        UserService.login(username, password).then((response) => {
+          let userInfo = response.data[0]
+          store.logIn(userInfo.UserName, userInfo.IsAdmin)
 
           this.$router.push({name: 'home'})
         }).catch((error) => {

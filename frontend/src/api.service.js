@@ -52,15 +52,15 @@ export const CoursesService = {
   },
 
   newCourses(courses) {
-    return ApiService.post('api/courses/new', {courses: courses})
+    return ApiService.post('api/courses/new/', {courses: courses})
   },
 
   updateCourses(courses) {
-    return ApiService.post('api/courses/updated', {courses: courses})
+    return ApiService.post('api/courses/updated/', {courses: courses})
   },
 
   deleteCourses(courses) {
-    return ApiService.post('api/courses/deleted', {courses: courses})
+    return ApiService.post('api/courses/deleted/', {courses: courses})
   }
 }
 
@@ -75,15 +75,15 @@ export const GPAService = {
     return ApiService.get(`gpa/${courseNumber}`)
   },
   newGPAInfo(gpas) {
-    return ApiService.post('api/coursesgpa/new', {gpas: gpas})
+    return ApiService.post('api/coursesgpa/new/', {gpas: gpas})
   },
 
   updateGPAInfo(gpas) {
-    return ApiService.post('api/coursesgpa/updated', {gpas: gpas})
+    return ApiService.post('api/coursesgpa/updated/', {gpas: gpas})
   },
 
   deleteGPAInfo(gpas) {
-    return ApiService.post('api/coursesgpa/deleted', {gpas: gpas})
+    return ApiService.post('api/coursesgpa/deleted/', {gpas: gpas})
   }
 }
 

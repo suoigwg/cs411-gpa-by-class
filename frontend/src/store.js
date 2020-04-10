@@ -61,27 +61,24 @@ export const store = new Vuex.Store({
 
 export default {
   state: {
-    username: 'Chen',
-    isAdmin: true,
-    loggedIn: true,
+    username: '',
+    isAdmin: false,
+    loggedIn: false,
     newItems: [],
     updatedItems: [],
     deletedItems: [],
-    deptGPA: []
   },
 
-  setDeptGPA(data) {
-    this.state.deptGPA = data
-  },
-
-  getDeptGPA() {
-    return this.state.deptGPA
+  logIn(username, isAdmin) {
+    this.state.username = username
+    this.state.isAdmin = isAdmin
+    this.state.loggedIn = true
   },
 
   clearEdit() {
     this.state.newItems = []
     this.state.updatedItems = []
     this.state.deletedItems = []
-  }
+  },
 }
 

@@ -11,7 +11,7 @@
       <md-table-row v-for="(item, index) in currentItems" :key="index">
         <md-table-cell v-for="(value, key) in item" :key="key" v-if="key !== 'id'">
           <textarea v-model="item[key]"
-                    @input="updateItem(item.id)">
+                    @input="updateItem(index)">
           </textarea>
         </md-table-cell>
         <md-table-cell>
@@ -106,7 +106,7 @@
         let index = this.items.indexOf(item)
         if (index !== -1) {
           this.items.splice(index, 1)
-          store.state.deletedItems.push(item.id)
+          store.state.deletedItems.push(item)
         }
       },
 
@@ -118,18 +118,14 @@
       },
 
       updateItem(itemId) {
-        if (!store.state.updatedItems.includes(itemId)) {
-          console.log(itemId)
-          store.state.updatedItems.push(itemId)
+        let index = itemId + this.itemsPerPage * (this.currentPage - 1)
+        if (!store.state.updatedItems.includes(index)) {
+          console.log(index)
+          store.state.updatedItems.push(index)
         }
       },
 
       addItem() {
-        for (const property in this.newItem) {
-          if (property !== 'id' && this.newItem[property] === '') {
-            return
-          }
-        }
         store.state.newItems.push(Object.assign({}, this.newItem))
         this.clearNewItem()
       },

@@ -13,7 +13,7 @@
       <li class="nav-item">
         <a class="nav-link" href="/prereq">Class Prerequistes</a>
       </li>
-      <li class="nav-item" v-if="isAdmin">
+      <li class="nav-item" v-if="sharedState.isAdmin">
         <router-link class="nav-link"
                      active-class="active"
                      exact :to="{name: 'admin'}"
@@ -22,7 +22,7 @@
         </router-link>
       </li>
     </ul>
-    <ul v-if="!loggedIn" class="navbar-nav ml-auto">
+    <ul v-if="!sharedState.loggedIn" class="navbar-nav ml-auto">
       <li class="nav-item">
         <router-link class="nav-link"
                      active-class="active"
@@ -42,7 +42,7 @@
     </ul>
     <ul v-else class="navbar-nav ml-auto">
       <li class="nav-item">
-        <div> Hi {{username}}!</div>
+        <div> Hi {{sharedState.username}}!</div>
       </li>
     </ul>
   </nav>
@@ -55,9 +55,7 @@
     name: 'MyHeader',
     data() {
       return {
-        username: store.state.username,
-        loggedIn: store.state.loggedIn,
-        isAdmin: store.state.isAdmin
+        sharedState: store.state
       }
     }
   }
