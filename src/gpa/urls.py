@@ -17,7 +17,6 @@ from django.contrib import admin
 from django.urls import path
 
 from courses import views
-from courses import rest
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +26,7 @@ urlpatterns = [
     path('api/subjects/', views.getAllDpetAbbr),
     path('api/courseNumbers/', views.course_num_list),
     path('api/gpa/', views.getGPAByDeptAndYear),
+    path('api/avggpa/', views.getAvgGPA),
     path('api/coursegpa/', views.getCourseGPA),
     path('api/coursegpa/new/', views.gpa_new),
     path('api/coursegpa/updated/', views.gpa_update),
@@ -35,9 +35,4 @@ urlpatterns = [
     path('api/courses/updated/', views.course_update),
     path('api/courses/deleted/', views.course_delete),
     path('api/professorNames/', views.professor_list), 
-    path('gpa/<int:year>/<str:dept>', rest.getGPAByDeptAndYear),
-    path('gpa/<str:course>', rest.getCourseGPA),
-    path('gpa/list/<int:year>', rest.getGPAByYear),
-    path('gpa/avg/<int:year>', rest.getAvgGPA),
-    path('api/subjects/', rest.getAllDpetAbbr)
 ]
