@@ -44,11 +44,11 @@ export const UserService = {
 
 export const CoursesService = {
   getSubjects() {
-    return ApiService.get('api/subjects')
+    return ApiService.get('api/subjects/')
   },
 
   getCourses(subject) {
-    return ApiService.get('api/courses', {subject: subject})
+    return ApiService.get('api/courses/', {subject: subject})
   },
 
   newCourses(courses) {
@@ -74,6 +74,9 @@ export const GPAService = {
   getGPAInfo(courseNumber) {
     return ApiService.get(`gpa/${courseNumber}`)
   },
+  getCourseGPAInfo(subject, courseno) {
+    return ApiService.get('api/coursegpa/', { subject: subject, number: courseno })
+  },
   newGPAInfo(gpas) {
     return ApiService.post('api/coursesgpa/new/', {gpas: gpas})
   },
@@ -89,10 +92,16 @@ export const GPAService = {
 
 export const ProfessorService = {
   getProfessorNames() {
-    return ApiService.get('api/professorNames')
+    return ApiService.get('api/professorNames/')
   },
 
   getGPA(year, dept) {
-    return ApiService.get('api/gpa', {year: year, dept: dept})
+    return ApiService.get('api/gpa/', {year: year, dept: dept})
+  }
+}
+
+export const AdvancedQueryService = {
+  execute(subject) {
+    return ApiService.get('api/avggpa/', { subject: subject })
   }
 }

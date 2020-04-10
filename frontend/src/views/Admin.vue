@@ -35,6 +35,9 @@
         </button>
         <EditableTable :items="items" :itemsPerPage="itemsPerPage" :currentPage="currentPage" @pagechanged="onPageChange"></EditableTable>
       </div>
+      <button @click="executeAdvancedQuery">
+        Execute Advanced Query
+      </button>
     </div>
   </div>
 </template>
@@ -43,7 +46,7 @@
   import CustomTable from '@/components/Table'
   import EditableTable from '@/components/EditableTable'
   import store from '@/store.js'
-  import { CoursesService, GPAService } from '@/api.service.js'
+  import { CoursesService, GPAService, AdvancedQueryService } from '@/api.service.js'
 
   export default {
     components: { CustomTable, EditableTable },
@@ -57,7 +60,7 @@
         itemsPerPage: 5,
         currentPage: 1,
         items: [],
-        masterItemList: []
+        masterItemList: [],
       }
     },
     computed: {
@@ -67,6 +70,7 @@
     },
     methods: {
       loadClassList() {
+        this.selectedClass = null
         CoursesService.getCourses(this.selectedSubject)
           .then(response => {
             console.log(response)
@@ -79,7 +83,7 @@
       },
 
       loadGPAInfo() {
-        GPAService.getGPAInfo(this.selectedSubject + this.selectedClass)
+        GPAService.getCourseGPAInfo(this.selectedSubject, this.selectedClass)
           .then(response => {
             console.log(response)
             this.items = response.data
@@ -159,6 +163,15 @@
         this.editMode = false
         this.items = this.masterItemList
         store.clearEdit()
+      },
+
+      executeAdvancedQuery() {
+        AdvancedQueryService.execute(this.selectedSubject)
+          .then(response => {
+            console.log(response)
+            this.items = response.data
+          })
+          .catch(error => (console.log(error)))
       }
     },
     created() {
