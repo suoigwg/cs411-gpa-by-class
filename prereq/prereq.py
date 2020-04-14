@@ -26,7 +26,10 @@ def get_prereq_from_string(string):
             res = get_prereq_from_string(prereq)
             if len(res) > 0:
                 temp.append(res)
-        result[KEYWORD_DICT['; or']] = temp
+        if len(temp) == 1:
+            return temp[0]
+        else:
+            result[KEYWORD_DICT['; or']] = temp
     elif string.find('; ') > -1:
         prereqs = string.split('; ')
         temp = []
@@ -34,7 +37,10 @@ def get_prereq_from_string(string):
             res = get_prereq_from_string(prereq)
             if len(res) > 0:
                 temp.append(res)
-        result[KEYWORD_DICT[';']] = temp
+        if len(temp) == 1:
+            return temp[0]
+        else:
+            result[KEYWORD_DICT[';']] = temp
     elif string.find('One of') > -1 or string.find(' or ') > -1:
         courses = re.findall(COURSE_REGEX, string)
         if len(courses) > 1:
@@ -45,14 +51,18 @@ def get_prereq_from_string(string):
             return []
     elif string.find(' and ') > -1:
         courses = re.findall(COURSE_REGEX, string)
-        if len(courses) > 0:
+        if len(courses) > 1:
             result['and'] = courses
         elif len(courses) > 0:
             return courses[0]
         else:
             return []
     else:
-        return re.findall(COURSE_REGEX, string)
+        temp = re.findall(COURSE_REGEX, string)
+        if len(temp) == 1:
+            return temp[0]
+        else:
+            return temp
     return result
 
 
