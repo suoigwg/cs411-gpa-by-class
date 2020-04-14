@@ -9,9 +9,11 @@ import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import {store} from './store'
+import ECharts from 'vue-echarts'
 
 Vue.config.productionTip = false
 Vue.use(VueMaterial)
+Vue.component('v-chart', ECharts)
 ApiService.init()
 /* eslint-disable no-new */
 new Vue({

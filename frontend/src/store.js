@@ -18,7 +18,7 @@ export const store = new Vuex.Store({
       state.deptGPA = data.sort((a, b) => a['CourseNo'] - b['CourseNo'])
     },
     [GET_SUBJECT_LIST](state, data) {
-      state.subjects = data
+      state.subjects = data.sort()
     },
     [GET_COURSE_GPA](state, data) {
       state.courseGPA = data.sort((a, b) => (a['Year'] + a['Term']).localeCompare((b['Year'] + b['Term'])))

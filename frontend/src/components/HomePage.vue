@@ -30,7 +30,7 @@
 
           <md-list-item>
             <md-icon>compare_arrows</md-icon>
-            <span class="md-list-item-text">Prereq</span>
+            <span class="md-list-item-text" v-on:click='navigate'>Prerequisites</span>
           </md-list-item>
 
         </md-list>
@@ -40,6 +40,7 @@
         <CourseHistory v-if="page==='By Course'"></CourseHistory>
         <DepartmentHistory v-if="page==='By Department'"></DepartmentHistory>
         <AllGrades v-if="page==='Department Average Grades'"></AllGrades>
+        <Graph v-if="page==='Prerequisites'"></Graph>
       </md-app-content>
     </md-app>
   </div>
@@ -49,6 +50,7 @@
   import CourseHistory from './course_history/CourseHistory'
   import DepartmentHistory from './department/DepartmentHistory'
   import AllGrades from './all_grades/AllGrades'
+  import Graph from './graph/Graph'
 
   export default {
     name: 'HelloWorld',
@@ -61,7 +63,8 @@
     components: {
       CourseHistory,
       DepartmentHistory,
-      AllGrades
+      AllGrades,
+      Graph
     },
     methods: {
       navigate: function (event) {
