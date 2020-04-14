@@ -8,7 +8,8 @@ COURSE_REGEX = r'[A-Z]{2,4}\s\d{3}'
 KEYWORD_DICT = {
     '; or': 'or',
     ';': 'and',
-    'One of': 'or'
+    'One of': 'or',
+    'Any of': 'or'
 }
 
 
@@ -41,7 +42,7 @@ def get_prereq_from_string(string):
             return temp[0]
         else:
             result[KEYWORD_DICT[';']] = temp
-    elif string.find('One of') > -1 or string.find(' or ') > -1:
+    elif string.find('One of') > -1 or string.find(' or ') > -1 or string.find('Any of') > -1:
         courses = re.findall(COURSE_REGEX, string)
         if len(courses) > 1:
             result['or'] = courses
@@ -84,5 +85,11 @@ if __name__ == "__main__":
     converted_prereq = {}
     for course, prereq in prereqs.items():
         converted_prereq[course] = get_prereq_from_string(prereq)
+
+    for course in converted_prereq:
+        print(course)
+        print(prereqs[course])
+        print(converted_prereq[course])
+        print('')
 
     write_to_file(converted_prereq, PARSED_PREREQ_PATH)
