@@ -48,7 +48,7 @@
         console.log('type' + type)
         this.$store.dispatch(type, {courseNumber: this.keyword}).then(() => {
           this.datacollection = {
-            labels: this.$store.state.courseGPA.map((item) => [item['Term'], item['Year'], findInstructor ? item['Title'] : item['Name']].join(' ')),
+            labels: this.$store.state.courseGPA.map((item) => [item['Term'], item['Year'], findInstructor ? item['Subject'] + item['CourseNo'] : item['Name']].join(' ')),
             datasets: [
               {
                 label: 'GPA',

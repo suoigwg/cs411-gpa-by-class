@@ -17,6 +17,7 @@ from GPA
          join Professor P on GPA.ProfessorId = P.ProfessorId
 where Subject = %s
   and CourseNo = %s
+group by Term, Year, CourseNo, Subject
 ;
 """
 
@@ -26,6 +27,7 @@ from GPA
          join Course C on GPA.CourseId = C.CourseId
          join Professor P on GPA.ProfessorId = P.ProfessorId
 where Year = %s
+group by Term, Year, CourseNo, Subject
 ;"""
 
 GET_AVG_GPA = """
@@ -44,6 +46,7 @@ from GPA
          join Course C on GPA.CourseId = C.CourseId
          join Professor P on GPA.ProfessorId = P.ProfessorId
 where P.Name = %s
+group by Term, Year, CourseNo, Subject
 ;
 """
 
