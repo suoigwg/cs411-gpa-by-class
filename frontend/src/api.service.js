@@ -11,7 +11,7 @@ const ApiService = {
 
   get(url, params = {}) {
     console.log(url)
-    return Vue.axios.get(url, { params: params })
+    return Vue.axios.get(url, {params: params})
   },
 
   post(url, params = {}) {
@@ -75,7 +75,7 @@ export const GPAService = {
     return ApiService.get(`gpa/${courseNumber}`)
   },
   getCourseGPAInfo(subject, courseno) {
-    return ApiService.get('api/coursegpa/', { subject: subject, number: courseno })
+    return ApiService.get('api/coursegpa/', {subject: subject, number: courseno})
   },
   newGPAInfo(gpas) {
     return ApiService.post('api/coursesgpa/new/', {gpas: gpas})
@@ -87,6 +87,10 @@ export const GPAService = {
 
   deleteGPAInfo(gpas) {
     return ApiService.post('api/coursesgpa/deleted/', {gpas: gpas})
+  },
+
+  getInstructorGrading(name) {
+    return ApiService.get('gpa/instructor/' + name)
   }
 }
 
@@ -97,11 +101,15 @@ export const ProfessorService = {
 
   getGPA(year, dept) {
     return ApiService.get('api/gpa/', {year: year, dept: dept})
+  },
+
+  searchProf(prefix) {
+    return ApiService.get('api/prof/' + prefix)
   }
 }
 
 export const AdvancedQueryService = {
   execute(subject) {
-    return ApiService.get('api/avggpa/', { subject: subject })
+    return ApiService.get('api/avggpa/', {subject: subject})
   }
 }

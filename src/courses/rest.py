@@ -63,3 +63,25 @@ def getAvgGPA(request, year):
         dict(zip(columns, row))
         for row in cursor.fetchall()
     ])
+
+
+@api_view(['GET'])
+def getInstructorGPA(request, name):
+    cursor = connection.cursor()
+    cursor.execute(GET_INSTRUCTOR_AVG_GPA, [name])
+    columns = [col[0] for col in cursor.description]
+    return Response([
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ])
+
+
+@api_view(['GET'])
+def searchInstructor(request, prefix):
+    cursor = connection.cursor()
+    cursor.execute(GET_PROF_NAME, ['%{}%'.format(prefix)])
+    res = []
+    for row in cursor.fetchall():
+        res.append(row[0])
+    return Response(res)
+

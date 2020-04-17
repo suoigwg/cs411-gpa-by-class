@@ -1,9 +1,10 @@
 <template>
   <div>
-    <md-field>
-      <label>Type in course number here(Example: CS411)</label>
-      <md-input v-model="course_number" @keyup.enter.native="fetchData"></md-input>
-    </md-field>
+    <md-autocomplete v-model="keyword" :md-options="instructors" @md-changed="getInstructors"
+                     @md-closed="fetchData" @keyup.enter.native="fetchData">
+      <label>Type in course number or Instructor name here</label>
+      <template slot="md-autocomplete-item" slot-scope="{ item }">{{ item}}</template>
+    </md-autocomplete>
     <span class="md-display-3">{{this.title}}</span>
     <div class="small" v-if="loaded">
       <LineChart :chart-data="datacollection"></LineChart>
@@ -13,6 +14,7 @@
 
 <script>
   import LineChart from '../line_chart/LineChart'
+  import {ProfessorService} from '../../api.service'
 
   export default {
     components: {
@@ -20,13 +22,14 @@
     },
     data() {
       return {
-        course_number: 'cs411',
+        keyword: 'cs411',
         loaded: true,
         title: '',
         datacollection: {
           labels: [],
           datasets: []
-        }
+        },
+        instructors: []
       }
     },
     created: function () {
@@ -34,9 +37,18 @@
     },
     methods: {
       fetchData: function () {
-        this.$store.dispatch('fetch_course_gpa', {courseNumber: this.course_number}).then(() => {
+        const isDigit = n => /\d+/.test(n)
+        let findInstructor = true
+        for (let i = 0; i < this.keyword.length; i++) {
+          if (isDigit(this.keyword[i])) {
+            findInstructor = false
+          }
+        }
+        let type = findInstructor ? 'fetch_instructor_grading' : 'fetch_course_gpa'
+        console.log('type' + type)
+        this.$store.dispatch(type, {courseNumber: this.keyword}).then(() => {
           this.datacollection = {
-            labels: this.$store.state.courseGPA.map((item) => [item['Term'], item['Year'], item['Name']].join(' ')),
+            labels: this.$store.state.courseGPA.map((item) => [item['Term'], item['Year'], findInstructor ? item['Title'] : item['Name']].join(' ')),
             datasets: [
               {
                 label: 'GPA',
@@ -45,10 +57,22 @@
             ]
           }
           if (this.$store.state.courseGPA.length > 0) {
-            this.title = this.course_number.toUpperCase() + ' ' + this.$store.state.courseGPA[0]['Title']
+            this.title = this.keyword.toUpperCase() + ' ' + (findInstructor ? '' : this.$store.state.courseGPA[0]['Title'])
           } else {
             this.title = 'No course found'
           }
+        })
+      },
+      getInstructors(searchTerm) {
+        this.instructors = new Promise(resolve => {
+          window.setTimeout(() => {
+            if (!searchTerm || searchTerm.length < 3) {
+              resolve(this.instructors)
+            } else {
+              const term = searchTerm.toLowerCase()
+              return ProfessorService.searchProf(term).then((response) => resolve(response['data']))
+            }
+          }, 500)
         })
       }
     },
