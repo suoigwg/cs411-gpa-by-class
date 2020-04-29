@@ -7,6 +7,7 @@ from .serializers import CourseSerializer, GpaSerializer, ProfessorSerializer, U
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import connection
+from .models import CoursePrereqModel
 
 # SQL queries
 USER_LOGIN = """select Username, IsAdmin
@@ -107,6 +108,28 @@ COURSE_DELETE = """
 DELETE FROM Course
 WHERE CourseId = %s
 """
+
+
+
+# djongo
+# Get /api/courseprereq/
+# Input: {course: CS418}
+# Response: {Prereq: [{CS 225: 4.0, MATH 241: 4.0, MATH 225: 4.0}, {CS 225: 4.0, MATH 241: 4.0, MATH 415: 4.0}],
+# AvgGPA: 4.0}
+@api_view(['GET'])
+def  get_course_prereq(request):
+    if request.method == 'GET':
+    	course = request.GET.get('course')
+    	courseprereq = CoursePrereqModel.objects.filter(Course=course).values("Prereq","AvgGpa")
+    	return JsonResponse(list(courseprereq), safe = False, status = 200)
+        # if serializer.is_valid():
+        # 	return JsonResponse(serializer.data, status = 200)
+        # else:
+        # 	return JsonResponse(serializer.errors, status = 400)
+    return HttpResponse("Incorrect request method", status = 400)
+
+
+
 
 # UserService:
 # POST /users/login/
