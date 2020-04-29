@@ -113,14 +113,14 @@ http://127.0.0.1:8000/api/professorNames/
 
 
 ## nosql 
-**Firstly, ensure MongoDB service is running on your PC**
- mongo
+**Firstly, ensure MongoDB service is running on your PC**  
+ mongo   
 
-**Navigate to src file**
-python3 manage.py migrate --database mongo
-python3 makemigrations
-python3 manage.py loaddata ./courses/fixtures/db_course_preq.json --app courses.CoursePrereqModel
-python3 manage.py runsever 
+**Navigate to src file**     
+python3 manage.py migrate --database mongo    
+python3 makemigrations    
+python3 manage.py loaddata ./courses/fixtures/db_course_preq.json --app courses.CoursePrereqModel   
+python3 manage.py runsever     
 
 
 
