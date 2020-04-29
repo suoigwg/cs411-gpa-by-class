@@ -1,7 +1,11 @@
-from .models import Course, Gpa, Professor, User
+from .models import Course, Gpa, Professor, User, CoursePrereqModel
 from rest_framework import serializers
 
-
+class CoursePrereqModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=CoursePrereqModel
+        fields=('Course','Prereq','AvgGpa')
+        
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course

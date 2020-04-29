@@ -43,5 +43,6 @@ urlpatterns = [
     path('gpa/list/<int:year>', rest.getGPAByYear),
     path('gpa/avg/<int:year>', rest.getAvgGPA),
     path('gpa/instructor/<str:name>', rest.getInstructorGPA),
+    path('api/courseprereq/',views.get_course_prereq),
 
 ]

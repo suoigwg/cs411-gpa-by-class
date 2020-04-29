@@ -1,4 +1,16 @@
 from django.db import models
+from djongo import models as m 
+# from djongo.models.indexes import TextIndex
+
+#djongo
+class CoursePrereqModel(m.Model): #collection name
+    Course=m.TextField()
+    Prereq=m.TextField()
+    AvgGpa=m.CharField(max_length=50)
+    # class Meta:
+    #     indexes = [
+    #         TextIndex(fields=['Course'])
+    #     ]
 
 class Course(models.Model):
     courseid = models.AutoField(db_column='CourseId', primary_key=True)  # Field name made lowercase.
