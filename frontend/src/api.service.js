@@ -2,8 +2,8 @@ import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
-var API_URL = 'http://localhost:8000'
-var MONGO_URL = 'http://localhost:8001'
+var API_URL = 'http://3.83.67.228:8000'
+var MONGO_URL = 'http://3.83.67.228:8001'
 const ApiService = {
   init() {
     Vue.use(VueAxios, axios)
