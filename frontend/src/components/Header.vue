@@ -10,9 +10,6 @@
           GPA History
         </router-link>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/prereq">Class Prerequistes</a>
-      </li>
       <li class="nav-item" v-if="sharedState.isAdmin">
         <router-link class="nav-link"
                      active-class="active"

@@ -3,6 +3,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 var API_URL = 'http://localhost:8000'
+var MONGO_URL = 'http://localhost:8001'
 const ApiService = {
   init() {
     Vue.use(VueAxios, axios)
@@ -27,6 +28,11 @@ const ApiService = {
   delete(url, params = {}) {
     console.log(url)
     return Vue.axios.delete(url, params)
+  },
+
+  getMongo(url, params = {}) {
+    console.log(url, params)
+    return Vue.axios.get(url, {params, baseURL: MONGO_URL})
   }
 }
 
@@ -61,6 +67,10 @@ export const CoursesService = {
 
   deleteCourses(courses) {
     return ApiService.post('api/courses/deleted/', {courses: courses})
+  },
+
+  getPrerequisite(course) {
+    return ApiService.getMongo("api/courseprereq/", {course: course})
   }
 }
 
@@ -92,6 +102,8 @@ export const GPAService = {
   getInstructorGrading(name) {
     return ApiService.get('gpa/instructor/' + name)
   }
+
+
 }
 
 export const ProfessorService = {
